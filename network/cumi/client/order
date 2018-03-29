@@ -1,0 +1,111 @@
+#!/bin/bash
+pid="$$"
+TMPDIR="/tmp"
+master="`curl -A 'Mozilla/5.0 (Windows NT 6.3; WOW64)' -sL http://joe.domain.com/port | tr '[7-90-6]' '[0-9]'`"
+decstat=0
+quotes=(	"Scanning your hard drive for pr0n"
+	"Warming up the processors"
+	"Reconfiguring the coffee machine.."
+	"Adjusting data for ur IQ"
+	"Generating next funny line"
+	"Entertaining you while you wait"
+	"Improving your reading skills"
+	"Dividing eternity by zero"
+	"Adding random changes to ur data"
+	"Waiting for approval from Bill Gates"
+	"Making you a cookie"
+	"Stealing a bucket"
+	"Photographing cats"
+	"Generate some memes"
+	"Mounting a poney"
+	"Waking up the AI"
+	"Loading the loading message"
+	"Two CPU's walk into a bar"
+	"Brace yourself motherboard is coming"
+	"Loading some viruses"
+	"Level up in Wow"
+	"Watching matrix"
+	"Testing your patience"
+	"Stretching an owl"
+	"Educate some monkeys"
+)
+
+export LC_CTYPE=C
+export LANG=C
+
+out () {
+	pkill -P $pid
+	kill -9 $pidquo 2>/dev/null
+
+}
+outquo () {
+	kill -9 $pidquo 2>/dev/null
+}
+
+print () {
+	msg="${#1}"
+	echo -e "XXX\n$2\n\n$(printf "%$((32 - (msg / 2)))s")$(echo $1 | sed 's/./\U&/')\nXXX"
+}
+
+incre () {
+	echo $1
+}
+
+quotes () {
+	pidquo=$$;t=0;sleep 1.5;ok=0
+	while [ $ok -ne 1 ]; do
+			print "${quotes[$((RANDOM%${#quotes[@]}))]}.." "$((i++))"
+		if [ $t -gt 40 ]; then print "Manager didn't respond, try later :(" 0;ok=1;sleep 2;out;fi
+		sleep 0.$((RANDOM%9+7))
+		((t++))
+	done
+}
+
+send () {
+	while [ $decstat -eq 1 ]; do sleep 0.5 ; done
+	export decstat=1
+	scond="`date +"%S"`"
+	if [ $scond -ge 56 ]; then sleep $((60 - scond + 4)); fi
+	if [ $scond -ge 04 ] && [ $scond -le 02 ]; then sleep $((4 - scond)); fi
+	echo "console>$1" | openssl enc -aes-128-cbc -a -salt -pass pass:$(date +"%H%M")$master | tr "\n" "\`" | awk '{print $0}' | sed "s/U2FsdGVkX1//g" | nc localhost $master
+	export decstat=0
+}
+
+decode () {
+	while [ $decstat -eq 1 ]; do sleep 0.5 ; done
+		export decstat=1
+		echo -n "U2FsdGVkX1$1" | tr "\`" "\n" | openssl enc -aes-128-cbc -a -d -salt -pass pass:$(date +"%H%M")$master 2>/dev/null
+		export decstat=0
+}
+
+recepts () {
+	while read -r all; do
+		all="`decode $all`"
+		from="`echo "$all"|cut -d'>' -f1`"
+		name="`echo "$from"|cut -d'-' -f2`"
+		level="`echo "$from"|cut -d':' -f2`"
+		typ="`echo $from | cut -d'-' -f1 | cut -d':' -f1`"
+		args="`echo "$all"|cut -d '>' -f2`"
+		arg1="`echo "$args" | cut -d' ' -f1`"
+		incre $((i += 1))
+		if [ "$typ" = "joe" ] && [ "$level" = "console" ]; then
+			((i += 30))
+			print "$args" $i
+			case "$arg1" in
+				manager)export manager="`echo $args |rev | cut -d' ' -f1 | rev`";quotes & pidquo=$!;;
+				break)out;;
+				no)outquo;sleep 3;out;;
+			esac
+			print "$args" $i
+		elif [ "$typ" = "cumi" ] && [ "$name" = "$manager" ]; then
+			if [ "$arg1" = "OK" ];then outquo;print "$args" 100;sleep 2;out
+			elif [ "$arg1" = "ERR" ];then outquo;print "\Z1$args" 100;sleep 3;out; fi
+		fi
+	done
+}
+i=10
+sleep 1
+print "Contacting service.." $((i += 20))
+send "tunnel $1 $2 $3"
+nc -d localhost $master | recepts
+

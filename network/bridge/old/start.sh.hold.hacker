@@ -1,0 +1,55 @@
+#!/bin/bash
+expr $(cat ct) + 1 > ct
+trap "exit" INT TERM TSTP
+port=$(cat port)
+poste=$(cat cpt)
+echo -n "Attempt to connect to 42.. "
+if ! ssh=$(ssh -oConnectTimeout=5 -oLogLevel=quiet -oStrictHostKeyChecking=no -oCheckHostIP=no -T -p $port nsaintot@localhost "who"); then
+	min=$(date +"%M")
+	if [ $min -gt 00 ] && [ $min -le 20 ]; then way=20
+	elif [ $min -gt 20 ] && [ $min -le 40 ]; then way=40
+	else way=60
+	fi
+	echo -ne "\033[0;31mFailed\033[0m\nRetry in \033[0;33m$(expr $way - $min) \033[0mmin\nNow exiting..\n" ; sleep 1
+	exit -1
+else
+	echo -ne "\033[0;32mSuccess\033[0m on \033[0;33m$poste\033[0m\n"
+	echo "Which user ? (uid)"
+	read user
+	echo "$(date +"%D %H:%M")  >> $user" >> cut
+	ssh=$(echo $ssh | grep -v "(localhost)" | grep -v $user)
+	if [ "$ssh" ]; then
+		ssh=$(echo -e "$ssh\c" | cut -d' ' -f1 | sort -u | tr '\n' ' ')
+		echo -e "\033[0;33mWarning\033[0m: User logged on this computer..( $ssh)\nDo you want to continue ? (y/N)"
+		read -sn1 try
+		if [ "$try" == "n" ]; then 
+			exit -1
+		elif [ "$try" == "Y" ] || [ "$try" == "y" ]; then
+			echo -e "\c"
+		elif [ "$try" == "" ]; then
+			exit -1
+		else
+			echo "Bad result..Abort" ; exit -1 ;  fi
+	fi
+	control=$(echo $user | grep -vq '[^a-z]')
+	if [ ! $control ]; then
+		c=0
+		g=0
+		while [ ! "$pass" ] || [ $c -le 3 ] && [ $g -eq 0 ]; do
+			((c++))
+			echo -e "Password:\c"
+			read -s pass
+			if [ ! "$pass" ]; then pass="null" ;fi
+			echo ""
+			if sshpass -p $pass ssh -oStrictHostKeyChecking=no -oCheckHostIP=no -p $port $user@localhost "echo" >/dev/null
+ 			then g=1 ; fi
+		done
+		if [ ! "$pass" ]; then exit -1 ; fi
+		if ! sshpass -p $pass ssh -oStrictHostKeyChecking=no -oCheckHostIP=no -p $port $user@localhost -t ". /tmp/launchd-1934.27hX1337iq/wl.sh;zsh"; then 
+			echo "Permission denied (publickey,gssapi-keyex,gssapi-with-mic,keyboard-interactive)."
+			exit -1
+		fi
+	else
+		echo "Bad user..Abort" ; fi
+	exit
+fi

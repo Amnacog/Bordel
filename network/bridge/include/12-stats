@@ -1,0 +1,5 @@
+#!/bin/bash
+if cat /home/joe/db_user | grep $user >/dev/null; then
+	echo -e "\033[1;4mWelcome Back\033[0m ! \033[1m$user\033[0m, \033[1m$(cat /home/joe/db_user | grep $user | cut -f5 | tr '.' 'h')min\033[0m under joe"
+	favcpt=$(cat /home/joe/db_user | grep $user | cut -f3)
+fi

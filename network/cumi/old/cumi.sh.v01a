@@ -1,0 +1,27 @@
+#!/bin/bash
+header="cumi v0.1a>"
+
+        function open {
+                echo "${header}deserve request: open tun" | nc localhost 1567
+                sleep 10
+                echo "${header}link on `echo $a|cut -d' ' -f1` at `echo $a|cut -d' ' -f2`" | nc localhost 1567
+        }
+        function close {
+                echo "${header}deserve request: close tun" | nc localhost 1567
+                sleep 4
+                echo "${header}unlink on `echo $a|cut -d' ' -f1` at `echo $a|cut -d' ' -f2`" | nc localhost 1567
+        }
+        function answer {
+                echo "$header$response" | nc localhost 1567
+        }
+
+while read i; do
+	a=`echo $i|cut -d' ' -f2-`
+	case "`echo $i|cut -d' ' -f1`" in
+		open)open;;
+		close)close;;
+		move)response="cumifly";answer;;
+		ping)response="pong";answer;;
+	esac
+done
+

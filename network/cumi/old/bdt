@@ -1,0 +1,15 @@
+if [ `date +"%S"` -eq 59 ] && [ "${onlinecumi[1]}" != "" ]; 		then
+	fullres="$(nc -q 1 localhost `cat masterport` < <(sleep 10) | 			while read res; do res=$(decode $res);echo $res | grep "KeepAlive" | cut -d'>' -f1 | cut -d'-' -f2; done)"
+	for res in `echo "$fullres"`; do
+		v=1
+		while [ "${onlinecumi[$v]}" != "" ]; do
+			if [ "${onlinecumi[$v]}" == "$res" ]; then onlinecumi[$v]="-"; fi
+			((v++))
+		done
+	done
+	v=1
+	while [ "${onlinecumi[$v]}" != "" ]; do
+		if [ "${onlinecumi[$v]}" != "-" ]; then putdb "cumi" "online" "0" "codename" "${onlinecumi[$v]}"; fi
+		((v++))
+	done
+fi

@@ -1,0 +1,12 @@
+HOW CUMI SYSTEM WORKS
+	    	      Client (Joe) - - - - - - - - - - - > TUN (Deployed by Cumi)
+				\    Link SSH(visible)	   /
+				 \			  /
+Send Informations intodb	  \		         /   Deployment (wl/lw/tun core) Launch Tun (Embedded Tun from the server)
+Listen to Joe permanently	   \		        /    Delete (Tun/baktrace) after users logged out (Checks Every Minutes from joe db)
+				      Cumi (On-the-go)
+					     ||
+					     \/
+				Cumi fly into network when
+			      Strangers connections Happened
+

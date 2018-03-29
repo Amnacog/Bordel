@@ -1,0 +1,20 @@
+echo -en "\E[6n"
+read -sdR cur
+cur=${cur#*[}
+curlin=$(echo $cur | cut -d';' -f1)
+
+if [ $curlin -ge 9 ] && [ $(tput cols) -ge 26 ];then
+	a=$(($(tput cols) - 26))
+	b=0
+	tput sc ; tput setaf $colorb
+	tput cup $(($b + 0)) $a ; echo " __                       "
+	tput cup $(($b + 1)) $a ; echo "/\\_\\    ___      __       "
+	tput cup $(($b + 2)) $a ; echo "\\/\\ \\  / __\`\  /'__\`\     "
+	tput cup $(($b + 3)) $a ; echo " \\ \\ \\/\ \_\ \/\  __/     "
+	tput cup $(($b + 4)) $a ; echo " _\\ \\ \\ \____/\ \____\\    "
+	tput cup $(($b + 5)) $a ; echo "/\\ \\_\\ \\/___/  \\/____/    "
+	tput cup $(($b + 6)) $a ; echo "\\ \\____/   0110 <------   "
+	tput cup $(($b + 7)) $a ; echo " \\/___/  ------> 1010111"
+	tput rc
+	tput sgr0
+fi

@@ -1,0 +1,8 @@
+if [ $(tput cols) -ge 77 ];then
+	c="\c"
+	t="\t"
+fi
+echo -e "Usage:$c"
+echo -e "\t\0Online\t\033[7;32m    \033[0m$c"
+echo -e "\t\0Offline/Not available\t\033[7;31m    \033[0m$c"
+echo -e "\t*Favourite\t\033[1;4;33m    \033[0m"

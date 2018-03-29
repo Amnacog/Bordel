@@ -1,0 +1,2 @@
+echo -e "\033[1;33mNOTICE\033[0m: \033[1m Joe is down new system will be available when ssh turns on..."
+
